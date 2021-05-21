@@ -1,0 +1,5 @@
+server:
+  port: 19880
+spring:
+  application:
+    name: iceberg-data-adaptor

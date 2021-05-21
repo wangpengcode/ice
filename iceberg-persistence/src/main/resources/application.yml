@@ -1,0 +1,5 @@
+server:
+  port: 19881
+spring:
+  application:
+    name: iceberg-persistence
