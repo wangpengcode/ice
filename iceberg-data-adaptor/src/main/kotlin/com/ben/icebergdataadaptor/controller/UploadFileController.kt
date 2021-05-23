@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*
 class UploadFileController {
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
-		System.out.println(list)
-		val array = list
+		kotlin.io.println(list)
+		val a = list.split(',')
+		System.out.println(a)
 	}
 }
