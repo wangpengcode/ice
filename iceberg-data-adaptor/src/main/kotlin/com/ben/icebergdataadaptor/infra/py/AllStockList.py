@@ -19,7 +19,7 @@ def download_data(date):
 #         k_rs = bs.query_history_k_data_plus(code, "code", date, date)
 #         data_df = data_df.append(k_rs.get_data())
     bs.logout()
-    requests.post(url='http://localhost:19888/file/upload/all',data=json.dumps(stock_list))
+    requests.post(url='http://localhost:19889/file/upload/all',data=json.dumps(stock_list))
 
 if __name__ == '__main__':
     # 如果不指定日期，则获取三天前的股票列表,由于在周末调用该接口会报错

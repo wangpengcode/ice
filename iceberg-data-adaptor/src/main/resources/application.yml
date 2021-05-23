@@ -1,5 +1,5 @@
 server:
-  port: 19888
+  port: 19889
 spring:
   application:
     name: iceberg-data-adaptor
