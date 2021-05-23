@@ -17,7 +17,7 @@ class AllStockDownloadService {
 			} else {
 				arrayOf(exe, pythonFile, csvName, day)
 			}
-			process = Runtime.getRuntime().exec("python3 /Users/wangpeng/Documents/code/test-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py")
+			process = Runtime.getRuntime().exec("python3 /Users/wangpeng/Documents/my-hobbit/hobbit-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py")
 			val result = process.waitFor()
 			System.out.println("AllStockDownloadService.downAllStock $result")
 		} catch (e: Exception) {
