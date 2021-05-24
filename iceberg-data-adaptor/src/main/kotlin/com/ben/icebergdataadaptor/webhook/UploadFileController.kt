@@ -25,7 +25,7 @@ class UploadFileController(val stockInfoService: StockInfoService) {
 			val b = it.replace("[[", "").replace("[", "")
 			val c = b.split(",")
 			val history = StockHistory(
-				id = c[0]. + c[1],
+				id = c[0] + c[1],
 				date = c[0],
 				code = c[1].replace("sh.","").replace("sz.","").replace("\"","").replace(" ","").toBigInteger(),
 				open = c[2],
