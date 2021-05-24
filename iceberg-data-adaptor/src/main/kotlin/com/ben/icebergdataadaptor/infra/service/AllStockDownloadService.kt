@@ -1,26 +1,23 @@
 package com.ben.icebergdataadaptor.infra.service
 
+import com.ben.icebergdataadaptor.webhook.WebHookUrl
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.io.IOException
 
 @Service
 class AllStockDownloadService {
 	
 	fun downAllStock(csvName: String, day: String? = null) {
 		var process: Process? = null
-		System.out.println("AllStockDownloadService.downAllStock")
 		try {
-			val exe = "python3"
-			val pythonFile = "../py/AllStockList.py"
-			val cmdArr = if (day == null) {
-				arrayOf(exe, pythonFile, csvName)
-			} else {
-				arrayOf(exe, pythonFile, csvName, day)
-			}
-			process = Runtime.getRuntime().exec("python3 /Users/wangpeng/Documents/my-hobbit/hobbit-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py")
+			// TODO need enhance the file path.
+			process = Runtime.getRuntime()
+				.exec("python3 /Users/wangpeng/Documents/code/test-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py ${WebHookUrl.BAO_STOCK_ALL_STOCK_CODE}")
 			val result = process.waitFor()
-			System.out.println("AllStockDownloadService.downAllStock $result")
+			logger.info("#downAllStock $result")
 		} catch (e: Exception) {
+			logger.info("#downAllStock error", e)
 			e.printStackTrace()
 		} catch (e: InterruptedException) {
 			e.printStackTrace()
@@ -34,6 +31,6 @@ class AllStockDownloadService {
 	}
 	
 	companion object {
-		const val WAIT_MILLS = 1 * 60 * 1000L
+		val logger: Logger = LoggerFactory.getLogger(AllStockDownloadService::class.java)
 	}
 }

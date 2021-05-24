@@ -1,4 +1,4 @@
-package com.ben.icebergdataadaptor.controller
+package com.ben.icebergdataadaptor.webhook
 
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
 import com.ben.icebergdataadaptor.persistence.service.StockInfoService
@@ -10,6 +10,7 @@ class UploadFileController(val stockInfoService: StockInfoService) {
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
 		val a = list.replace("[","").replace("]","").split(',')
+		println(a)
 		for(i in a) {
 			stockInfoService.save(StockInfo(stockNo = i))
 		}
