@@ -84,4 +84,8 @@ data class StockHistory(
 	/** 是否ST股，1是，0否**/
 	@Column(name = "isST", length = 20)
 	val isST: String? = null
-)
+) {
+	override fun toString(): String {
+		return "StockHistory(id='$id', date='$date', code=$code, open='$open', high='$high', low='$low', close='$close', preclose='$preclose', volume='$volume', amount='$amount', adjustflag='$adjustflag', turn='$turn', tradestatus='$tradestatus', pctChg='$pctChg', peTTM='$peTTM', pbMRQ='$pbMRQ', psTTM='$psTTM', pcfNcfTTM='$pcfNcfTTM', isST=$isST)"
+	}
+}
