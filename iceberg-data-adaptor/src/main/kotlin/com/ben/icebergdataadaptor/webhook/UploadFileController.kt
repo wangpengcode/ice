@@ -12,7 +12,7 @@ class UploadFileController(val stockInfoService: StockInfoService) {
 		val a = list.replace("[","").replace("]","").split(',')
 		println(a)
 		for(i in a) {
-			stockInfoService.save(StockInfo(stockNo = i))
+			stockInfoService.save(StockInfo(exchangeHouse = i.split(".")[0],  stockNo= i.split(".")[1]))
 		}
 	}
 }

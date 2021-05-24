@@ -9,5 +9,9 @@ import javax.persistence.*
 data class StockInfo(
     @Id
     @Column(name = "stock_no", length = 64)
-    val stockNo: String
+    val stockNo: String,
+    
+    /** **/
+    @Column(name = "exchange_house", length = 10)
+    val exchangeHouse: String
 )

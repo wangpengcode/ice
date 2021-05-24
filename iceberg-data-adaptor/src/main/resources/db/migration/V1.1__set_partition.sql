@@ -9,32 +9,34 @@
 -- isST	是否ST股，1是，0否
 
 create table stock_history(
-data varchar(20) not null comment '交易所行情日期',
-code varchar(20) not null comment '证券代码',
-open varchar(20) not null comment '开盘价',
-high varchar(20) not null comment '最高价',
-low varchar(20) not null comment '最低价',
-close varchar(20) not null comment '收盘价',
-preclose varchar(20) not null comment '前收盘价',
-volume varchar(20) not null comment '成交量（累计 单位：股）',
-amount varchar(20) not null comment '成交额（单位：人民币元）',
-adjustflag varchar(20) not null comment '复权状态(1：后复权， 2：前复权，3：不复权）',
-turn varchar(20) not null comment '换手率',
-tradestatus varchar(20) not null comment '交易状态(1：正常交易 0：停牌）',
-pctChg varchar(20) not null comment '涨跌幅（百分比）',
-peTTM varchar(20) not null comment '滚动市盈率',
-pbMRQ varchar(20) not null comment '市净率',
-psTTM varchar(20) not null comment '滚动市销率',
-pcfNcfTTM varchar(20) not null comment '滚动市现率',
-isST varchar(20) not null comment '是否ST股，1是，0否',
-UNIQUE KEY `data_code_key` (`data`,`code`)
-) partition by range(code);
+id varchar(40),
+date varchar(20) not null ,
+code Bigint ,
+open varchar(20) not null ,
+high varchar(20) not null ,
+low varchar(20) not null ,
+close varchar(20) not null,
+preclose varchar(20) not null ,
+volume varchar(20) not null ,
+amount varchar(20) not null ,
+adjustflag varchar(20) not null ,
+turn varchar(20) not null  ,
+tradestatus varchar(20) not null,
+pctchg varchar(20) not null,
+pettm varchar(20) not null,
+pbmrq varchar(20) not null,
+psttm varchar(20) not null,
+pcfncfttm varchar(20) not null ,
+isst varchar(20) not null ) partition by range(code);
+
+alter table stock_history add constraint date_code_key unique (date,code);
+
 create table stock_history_210 partition of stock_history for values from ('1') to ('210');
 create table stock_history_420 partition of stock_history for values from ('210') to ('420');
 create table stock_history_640 partition of stock_history for values from ('420') to ('640');
 create table stock_history_860 partition of stock_history for values from ('640') to ('860');
-create table stock_history_1000 partition of stock_history for values from ('860') to ('1000');
-create table stock_history_300001 partition of stock_history for values from ('1000') to ('300001');
+create table stock_history_1000 partition of stock_history for values from ('860') to ('1001');
+create table stock_history_300001 partition of stock_history for values from ('1001') to ('300001');
 create table stock_history_300200 partition of stock_history for values from ('300001') to ('300200');
 create table stock_history_300400 partition of stock_history for values from ('300200') to ('300400');
 create table stock_history_300600 partition of stock_history for values from ('300400') to ('300600');
