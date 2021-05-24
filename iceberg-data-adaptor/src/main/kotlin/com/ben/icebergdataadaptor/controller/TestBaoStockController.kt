@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RestController
 class TestBaoStockController(val baoStockApi: BaoStockApi) {
 	
 	@GetMapping("/python")
-	fun test() : String {
-		System.out.println("python")
-		baoStockApi.executeDownloadAllStockByDay("abc.csv", "2021-05-21")
-		System.out.println("python end")
+	fun test(): String {
+		baoStockApi.executeDownloadAllStockByDay("2021-05-21")
 		return "hello"
 	}
 }

@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service
 @Service
 class AllStockDownloadService {
 	
-	fun downAllStock(csvName: String, day: String? = null) {
+	fun downAllStock(day: String? = null) {
 		var process: Process? = null
 		try {
 			// TODO need enhance the file path.
-			process = Runtime.getRuntime()
-				.exec("python3 /Users/wangpeng/Documents/code/test-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py ${WebHookUrl.BAO_STOCK_ALL_STOCK_CODE}")
+			var cmd =
+				"python3 /Users/wangpeng/Documents/code/test-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py ${WebHookUrl.BAO_STOCK_ALL_STOCK_CODE}"
+			day?.let { cmd = "$cmd $day" }
+			process = Runtime.getRuntime().exec(cmd)
 			val result = process.waitFor()
 			logger.info("#downAllStock $result")
 		} catch (e: Exception) {

@@ -9,8 +9,8 @@ class BaoStockImpl(
 	val allStockDownloadService: AllStockDownloadService
 ) : BaoStockApi {
 	
-	override fun executeDownloadAllStockByDay(csvName: String, day: String?) {
+	override fun executeDownloadAllStockByDay(day: String?) {
 		System.out.println("BaoStockImpl#executeDownloadAllStockByDay ")
-		allStockDownloadService.downAllStock(csvName, day)
+		allStockDownloadService.downAllStock(day)
 	}
 }
