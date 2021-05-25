@@ -15,7 +15,7 @@ class ReceiveController(
 	) {
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
-		val a = list.replace("[","").replace("]","").split(',')
+		val a = list.replace("[","").replace("]","").split(',').deleteQuotation()
 		println(a)
 		for(i in a) {
 			stockInfoPersistenceService.save(StockInfo(exchangeHouse = i.split(".")[0],  stockNo= i.split(".")[1]))
@@ -34,6 +34,7 @@ class ReceiveController(
 //				id = c[0] + c[1],
 				date = c[0],
 				code = c[1].replace("sh.","").replace("sz.","").replace("\"","").replace(" ","").toBigInteger(),
+				stockNo = c[1],
 				open = c[2],
 				high = c[3],
 				low = c[4],

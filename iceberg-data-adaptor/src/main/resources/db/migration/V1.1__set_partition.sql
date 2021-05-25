@@ -12,6 +12,7 @@ create table stock_history(
 id Bigint,
 date varchar(20) not null ,
 code Bigint ,
+stock_no varchar(20) not null,
 open varchar(20) not null ,
 high varchar(20) not null ,
 low varchar(20) not null ,
@@ -37,6 +38,7 @@ increment by 1
 cache 20;
 
 alter table stock_history add constraint date_code_key unique (date,code);
+alter table stock_history add constraint date_code_key_stock_no unique (date,code,stock_no);
 
 create table stock_history_210 partition of stock_history for values from ('1') to ('210');
 create table stock_history_420 partition of stock_history for values from ('210') to ('420');

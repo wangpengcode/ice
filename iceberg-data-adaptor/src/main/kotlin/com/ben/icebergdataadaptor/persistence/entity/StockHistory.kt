@@ -22,6 +22,10 @@ data class StockHistory(
 	@Column(name = "code", length = 20)
 	val code: BigInteger,
 	
+	/** 证券代码 **/
+	@Column(name = "stock_no", length = 20)
+	val stockNo: String,
+	
 	/** 开盘价 **/
 	@Column(name = "open", length = 20)
 	val open: String,
