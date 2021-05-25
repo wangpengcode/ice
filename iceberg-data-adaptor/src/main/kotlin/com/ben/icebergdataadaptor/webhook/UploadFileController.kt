@@ -21,6 +21,7 @@ class UploadFileController(val stockInfoService: StockInfoService) {
 	fun history(@RequestBody list: String) {
 		println(list)
 		val a = list.split("],")
+		// TODO need refactor.
 		a.forEach {
 			val b = it.replace("[[", "").replace("[", "")
 			val c = b.split(",")
