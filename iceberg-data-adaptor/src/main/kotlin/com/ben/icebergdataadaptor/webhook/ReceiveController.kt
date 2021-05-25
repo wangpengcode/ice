@@ -1,10 +1,13 @@
 package com.ben.icebergdataadaptor.webhook
 
 import com.ben.icebergdataadaptor.extensions.deleteQuotation
+import com.ben.icebergdataadaptor.extensions.getNullableSet
 import com.ben.icebergdataadaptor.persistence.entity.StockHistory
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
 import com.ben.icebergdataadaptor.persistence.service.StockHistoryPersistenceService
 import com.ben.icebergdataadaptor.persistence.service.StockInfoPersistenceService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -24,9 +27,10 @@ class ReceiveController(
 	
 	@PostMapping("/history")
 	fun history(@RequestBody list: String) {
-		println(list)
+		val stockSet = getNullableSet<String>()
 		val a = list.split("],")
 		// TODO need refactor.
+		var stockNo: String? = null
 		a.forEach {
 			val b = it.replace("[[", "").replace("[", "")
 			val c = b.split(",").deleteQuotation()
@@ -52,8 +56,14 @@ class ReceiveController(
 				pcfNcfTTM = c[16],
 				isST = c[17]
 			)
+			stockNo = history.stockNo
+			stockSet.add(history.stockNo)
 			stockHistoryPersistenceService.save(history);
 		}
+		logger.info("#history download stock = $stockNo, already download ${stockSet.size}!")
 	}
 	
+	companion object {
+		val logger: Logger = LoggerFactory.getLogger(ReceiveController::class.java)
+	}
 }

@@ -28,6 +28,7 @@ dependencies {
     implementation("io.vavr:vavr-jackson:0.10.3")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("com.google.guava:guava:23.0")
 }
 
 tasks.withType<KotlinCompile> {

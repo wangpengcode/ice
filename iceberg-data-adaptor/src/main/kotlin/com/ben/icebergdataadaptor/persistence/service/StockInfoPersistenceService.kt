@@ -19,6 +19,13 @@ class StockInfoPersistenceService(
 	fun findById(id: String) {
 		stockInfoRepository.findById(id)
 	}
+	
+	fun queryAll(): List<StockInfo>? = try {
+		stockInfoRepository.findAll().toList()
+	} catch (e: Exception) {
+		StockHistoryPersistenceService.logger.error("#queryAll error", e)
+		null
+	}
     
     companion object {
         val logger: Logger = LoggerFactory.getLogger(StockInfoPersistenceService::class.java)
