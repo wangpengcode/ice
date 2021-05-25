@@ -17,7 +17,7 @@ class ReceiveController(
 	val stockHistoryPersistenceService: StockHistoryPersistenceService
 	) {
 	
-	private val stockSet = getNullableSet<String>()
+//	private val stockSet = ThreadLocal<HashSet<String>>().also { it.set(getNullableSet()) }
 	
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
@@ -59,10 +59,10 @@ class ReceiveController(
 				isST = c[17]
 			)
 			stockNo = history.stockNo
-			stockSet.add(history.stockNo)
+//			stockSet.get().add(history.stockNo)
 			stockHistoryPersistenceService.save(history);
 		}
-		logger.info("#history download stock = $stockNo, already download ${stockSet.size}!")
+		logger.info("#history download stock = $stockNo, already download!")
 	}
 	
 	companion object {
