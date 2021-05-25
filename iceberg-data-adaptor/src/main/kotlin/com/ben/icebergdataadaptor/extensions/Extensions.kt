@@ -23,7 +23,7 @@ fun String.deleteQuotation(): String {
 }
 
 fun List<String>.deleteQuotation(): List<String> {
-    return this.map { it -> it.deleteQuotation() }.toList()
+    return this.map { it -> it.deleteQuotation().replace(" ","") }.toList()
 }
 
 fun <T> Any?.value(): T {

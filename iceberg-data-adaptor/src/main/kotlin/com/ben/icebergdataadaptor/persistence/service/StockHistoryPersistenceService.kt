@@ -15,6 +15,10 @@ class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRep
 		throw e
 	}
 	
+	fun queryTheOldestDay(stockNo: String) {
+	
+	}
+	
 	companion object {
 		val logger: Logger = LoggerFactory.getLogger(StockHistoryPersistenceService::class.java)
 	}
