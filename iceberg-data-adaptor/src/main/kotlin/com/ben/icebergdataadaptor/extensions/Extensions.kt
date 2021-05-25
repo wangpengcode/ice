@@ -1,5 +1,6 @@
 package com.ben.icebergdataadaptor.extensions
 
+import com.ben.icebergdataadaptor.infra.service.AllStockDownloadService
 import java.math.BigDecimal
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
@@ -59,5 +60,21 @@ inline fun <reified T : Any> distinctValueOrError(list: List<T>?, fieldName: KPr
         values.size > 1 -> throw Exception("$fieldName have too many value.")
         values.size == 0 -> null
         else -> values.first()
+    }
+}
+
+fun String.executeAsRuntimeCmd() {
+    var process: Process? = null
+    try {
+        process = Runtime.getRuntime().exec(this)
+        process.waitFor()
+    } catch (e: Exception) {
+        throw e
+    } finally {
+        if (process != null) {
+            process.errorStream.close()
+            process.inputStream.close()
+            process.outputStream.close()
+        }
     }
 }

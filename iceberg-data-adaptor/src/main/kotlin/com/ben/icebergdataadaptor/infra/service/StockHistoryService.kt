@@ -1,5 +1,6 @@
 package com.ben.icebergdataadaptor.infra.service
 
+import com.ben.icebergdataadaptor.extensions.executeAsRuntimeCmd
 import com.ben.icebergdataadaptor.webhook.WebHookUrl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -15,20 +16,10 @@ class StockHistoryService {
 			var cmd =
 				"python3 /Users/wangpeng/Documents/code/test-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/StockHistory.py ${WebHookUrl.BAO_STOCK_STOCK_HISTORY}"
 			cmd = "$cmd $stockCode $startDay $endDay"
-			process = Runtime.getRuntime().exec(cmd)
-			val result = process.waitFor()
-			logger.info("#stockHistory $result")
+			cmd.executeAsRuntimeCmd()
 		} catch (e: Exception) {
 			logger.info("#stockHistory error", e)
-			e.printStackTrace()
-		} catch (e: InterruptedException) {
-			e.printStackTrace()
-		} finally { // TODO need refactor this duplicate code
-			if (process != null) {
-				process.errorStream.close()
-				process.inputStream.close()
-				process.outputStream.close()
-			}
+			throw e
 		}
 	}
 	
