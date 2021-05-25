@@ -24,6 +24,8 @@ def download_data(stock,webhook,start_day,end_day):
 if __name__ == '__main__':
     # 如果不指定日期，则获取三天前的股票列表,由于在周末调用该接口会报错
     end_day = None
+    start_day = ''
+    stock = ''
     webhook = sys.argv[1]
     if (len(sys.argv) == 5):
         stock = sys.argv[2]

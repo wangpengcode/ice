@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
-class StockInfoService(
+class StockInfoPersistenceService(
     val stockInfoRepository: StockInfoRepository
 ) {
 	fun save(entity: StockInfo) = try {
@@ -21,6 +21,6 @@ class StockInfoService(
 	}
     
     companion object {
-        val logger: Logger = LoggerFactory.getLogger(StockInfoService::class.java)
+        val logger: Logger = LoggerFactory.getLogger(StockInfoPersistenceService::class.java)
     }
 }

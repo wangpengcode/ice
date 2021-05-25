@@ -1,19 +1,24 @@
 package com.ben.icebergdataadaptor.webhook
 
+import com.ben.icebergdataadaptor.extensions.deleteQuotation
 import com.ben.icebergdataadaptor.persistence.entity.StockHistory
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
-import com.ben.icebergdataadaptor.persistence.service.StockInfoService
+import com.ben.icebergdataadaptor.persistence.service.StockHistoryPersistenceService
+import com.ben.icebergdataadaptor.persistence.service.StockInfoPersistenceService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/file/upload")
-class UploadFileController(val stockInfoService: StockInfoService) {
+class ReceiveController(
+	val stockInfoPersistenceService: StockInfoPersistenceService,
+	val stockHistoryPersistenceService: StockHistoryPersistenceService
+	) {
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
 		val a = list.replace("[","").replace("]","").split(',')
 		println(a)
 		for(i in a) {
-			stockInfoService.save(StockInfo(exchangeHouse = i.split(".")[0],  stockNo= i.split(".")[1]))
+			stockInfoPersistenceService.save(StockInfo(exchangeHouse = i.split(".")[0],  stockNo= i.split(".")[1]))
 		}
 	}
 	
@@ -24,9 +29,9 @@ class UploadFileController(val stockInfoService: StockInfoService) {
 		// TODO need refactor.
 		a.forEach {
 			val b = it.replace("[[", "").replace("[", "")
-			val c = b.split(",")
+			val c = b.split(",").deleteQuotation()
 			val history = StockHistory(
-				id = c[0] + c[1],
+//				id = c[0] + c[1],
 				date = c[0],
 				code = c[1].replace("sh.","").replace("sz.","").replace("\"","").replace(" ","").toBigInteger(),
 				open = c[2],
@@ -46,7 +51,7 @@ class UploadFileController(val stockInfoService: StockInfoService) {
 				pcfNcfTTM = c[16],
 				isST = c[17]
 			)
-			println(history)
+			stockHistoryPersistenceService.save(history);
 		}
 	}
 	

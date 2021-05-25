@@ -9,7 +9,7 @@
 -- isST	是否ST股，1是，0否
 
 create table stock_history(
-id varchar(40),
+id Bigint,
 date varchar(20) not null ,
 code Bigint ,
 open varchar(20) not null ,
@@ -19,15 +19,22 @@ close varchar(20) not null,
 preclose varchar(20) not null ,
 volume varchar(20) not null ,
 amount varchar(20) not null ,
-adjustflag varchar(20) not null ,
+adjust_flag varchar(20) not null ,
 turn varchar(20) not null  ,
-tradestatus varchar(20) not null,
-pctchg varchar(20) not null,
-pettm varchar(20) not null,
-pbmrq varchar(20) not null,
-psttm varchar(20) not null,
-pcfncfttm varchar(20) not null ,
-isst varchar(20) not null ) partition by range(code);
+trade_status varchar(20) not null,
+pct_chg varchar(20) not null,
+pe_ttm varchar(20) not null,
+pb_mrq varchar(20) not null,
+ps_ttm varchar(20) not null,
+pcf_ncfttm varchar(20) not null ,
+is_st varchar(20) not null ) partition by range(code);
+
+create sequence HIBERNATE_SEQUENCE
+minvalue 1
+maxvalue 9999999999999999
+start with 1
+increment by 1
+cache 20;
 
 alter table stock_history add constraint date_code_key unique (date,code);
 
