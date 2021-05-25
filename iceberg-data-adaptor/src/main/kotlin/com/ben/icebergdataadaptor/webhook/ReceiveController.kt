@@ -16,6 +16,9 @@ class ReceiveController(
 	val stockInfoPersistenceService: StockInfoPersistenceService,
 	val stockHistoryPersistenceService: StockHistoryPersistenceService
 	) {
+	
+	private val stockSet = getNullableSet<String>()
+	
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
 		val a = list.replace("[","").replace("]","").split(',').deleteQuotation()
@@ -27,7 +30,6 @@ class ReceiveController(
 	
 	@PostMapping("/history")
 	fun history(@RequestBody list: String) {
-		val stockSet = getNullableSet<String>()
 		val a = list.split("],")
 		// TODO need refactor.
 		var stockNo: String? = null
