@@ -8,6 +8,15 @@ import org.springframework.stereotype.Service
 
 @Service
 class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRepository) {
+	fun saveAll(entities: List<StockHistory>): MutableIterable<StockHistory>? = try {
+		if (entities.isNotEmpty()) {
+			stockHistoryRepository.saveAll(entities)
+		} else null
+	} catch (e: Exception) {
+		logger.error("#saveAll with error", e)
+		null
+	}
+	
 	fun save(entity: StockHistory) = try {
 		stockHistoryRepository.save(entity)
 	} catch (e: Exception) {

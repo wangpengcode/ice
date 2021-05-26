@@ -33,7 +33,8 @@ class ReceiveController(
 		val a = list.split("],")
 		// TODO need refactor.
 		var stockNo: String? = null
-		a.forEach {
+		var list: MutableList<StockHistory> =  mutableListOf()
+		for (it in a) {
 			val b = it.replace("[[", "").replace("[", "")
 			val c = b.split(",").deleteQuotation()
 			val history = StockHistory(
@@ -56,12 +57,14 @@ class ReceiveController(
 				pbMRQ = c[14],
 				psTTM = c[15],
 				pcfNcfTTM = c[16],
-				isST = c[17]
+				isST = c[17].replace("]]","")
 			)
-			stockNo = history.stockNo
-//			stockSet.get().add(history.stockNo)
-			stockHistoryPersistenceService.save(history);
+			list.add(history)
+			if (list.size == 20) {
+				stockHistoryPersistenceService.saveAll(list)
+			}
 		}
+		stockHistoryPersistenceService.saveAll(list)
 		logger.info("#history download stock = $stockNo, already download!")
 	}
 	
