@@ -21,8 +21,8 @@ class StockInfoPersistenceService(
 		logger.error("#save error:", e)
 	}
 	
-	fun findById(id: String) {
-		stockInfoRepository.findById(id)
+	fun findByStockNo(stockNo: String): StockInfo {
+		return stockInfoRepository.findByStockNo(stockNo)
 	}
 	
 	fun queryAll(): List<StockInfo>? = try {

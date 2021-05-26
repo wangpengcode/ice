@@ -20,13 +20,14 @@ class IcebergJob(
 	val stockHistoryPersistence: StockHistoryPersistenceService,
 	val downloadService: StockHistoryDownloadService
 ) {
-	@Scheduled(cron = "0 49 10,23,1 * * ?")
+	@Scheduled(cron = "0 53 14,23,2 * * ?")
 	fun downloadAndPersistenceStockHistory() {
 		logger.info("start job to download stock history start = {}", LocalDateTime.now())
 		try {
 			val currentDay = LocalDate.now().toString()
-			val rateLimiter = RateLimiter.create(3.0)
-			stockInfoPersistence.queryAll()?.let {
+			val rateLimiter = RateLimiter.create(5.0)
+			val stockList = stockInfoPersistence.queryAll()?.sortedByDescending { it.haveDataTimes }
+			stockList?.let {
 				for (info in it) {
 					if (info.status == "NOT_STOCK") {
 						continue
