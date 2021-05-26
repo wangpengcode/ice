@@ -37,7 +37,6 @@ start with 1
 increment by 1
 cache 20;
 
-alter table stock_history add constraint date_code_key unique (date,code);
 alter table stock_history add constraint date_code_key_stock_no unique (date,code,stock_no);
 
 create table stock_history_210 partition of stock_history for values from ('1') to ('210');

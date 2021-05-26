@@ -12,7 +12,7 @@ class TestBaoStockController(val baoStockApi: BaoStockApi) {
 	
 	@GetMapping("/python")
 	fun test(): String {
-		baoStockApi.executeDownloadAllStockByDay("2021-05-21")
+		baoStockApi.executeDownloadAllStockByDay("2021-05-25")
 		return "hello"
 	}
 }
