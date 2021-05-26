@@ -20,7 +20,7 @@ class IcebergJob(
 	val stockHistoryPersistence: StockHistoryPersistenceService,
 	val downloadService: StockHistoryDownloadService
 ) {
-	@Scheduled(cron = "0 53 14,23,2 * * ?")
+	@Scheduled(cron = "0 9 22,23,2 * * ?")
 	fun downloadAndPersistenceStockHistory() {
 		logger.info("start job to download stock history start = {}", LocalDateTime.now())
 		try {

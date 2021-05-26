@@ -13,7 +13,7 @@ class AllStockDownloadService {
 		try {
 			// TODO need enhance the file path.
 			var cmd =
-				"python3 /Users/wangpeng/Documents/code/test-code/new-ice/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/AllStockList.py ${WebHookUrl.BAO_STOCK_ALL_STOCK_CODE}"
+				"python3 /Users/wangpeng/Documents/my-hobbit/hobbit-code/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/testAllStockInfo.py ${WebHookUrl.BAO_STOCK_ALL_STOCK_CODE}"
 			day?.let { cmd = "$cmd $day" }
 			cmd.executeAsRuntimeCmd()
 		} catch (e: Exception) {

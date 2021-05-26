@@ -92,7 +92,7 @@ class ReceiveController(
 					isST = c[17].replace("]]", "")
 				)
 				list.add(history)
-				if (list.size == 40) {
+				if (list.size == 80) {
 					stockHistoryPersistenceService.saveAll(list)
 					list.clear()
 				}
