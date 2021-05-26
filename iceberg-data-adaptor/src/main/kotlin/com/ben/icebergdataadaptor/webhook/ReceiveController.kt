@@ -48,7 +48,7 @@ class ReceiveController(
 		stockInfoPersistenceService.queryAll()?.let {
 			for (stock in it) {
 				for (i in industryList) {
-					if (i.code == stock.codeName) {
+					if (i.nakedCode == stock.stockNo) {
 						stock.apply {
 							codeName = i.codeName
 							lastUpdateDate = i.date
