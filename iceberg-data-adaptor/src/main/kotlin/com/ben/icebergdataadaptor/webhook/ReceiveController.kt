@@ -35,7 +35,10 @@ class ReceiveController(
 					stockNo = currentItem[0].replace("[", "").replace("[", "").replace("[", "").replace("\"", "")
 						.toNakedCode(),
 					exchangeHouse = currentItem[0].split(".")[0].replace("[[\\", "").replace("\"", "").trim(),
-					codeName = decode(currentItem[1].replace("\"", "").replace("*", "").replace("ST", "").trim()),
+					codeName = decode(
+						currentItem[1].replace("\"", "").replace("*", "").replace("ST", "").replace("\"", "")
+							.replace("\"", "").trim()
+					),
 					ipoDate = currentItem[2],
 					outDate = currentItem[3],
 					type = currentItem[4],
