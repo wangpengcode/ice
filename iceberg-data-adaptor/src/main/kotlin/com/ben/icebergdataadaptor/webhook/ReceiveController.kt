@@ -63,6 +63,7 @@ class ReceiveController(
 			if (list.size == 20) {
 				stockHistoryPersistenceService.saveAll(list)
 			}
+			stockNo = history.stockNo
 		}
 		stockHistoryPersistenceService.saveAll(list)
 		logger.info("#history download stock = $stockNo, already download!")
