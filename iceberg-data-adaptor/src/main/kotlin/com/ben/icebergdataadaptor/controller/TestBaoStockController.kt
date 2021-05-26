@@ -15,4 +15,9 @@ class TestBaoStockController(val baoStockApi: BaoStockApi) {
 		baoStockApi.executeDownloadAllStockByDay("2021-05-25")
 		return "hello"
 	}
+
+	@GetMapping("/industry")
+	fun industry() {
+		baoStockApi.industry()
+	}
 }

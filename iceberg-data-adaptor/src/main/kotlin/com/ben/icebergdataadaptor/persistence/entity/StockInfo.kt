@@ -46,7 +46,23 @@ data class StockInfo(
 	
 	/** 上市状态，其中1：上市，0：退市 **/
 	@Column(name = "ipo_status", length = 20)
-	var ipoStatus: String? = null
+	var ipoStatus: String? = null,
+
+	/** 所属行业 **/
+	@Column(name = "industry", length = 60)
+	var industry: String? = null,
+
+	/** 所属行业类别 **/
+	@Column(name = "industry_classification", length = 60)
+	var industryClassification: String? = null,
+
+	/** 原始代码 **/
+	@Column(name = "code_with_exchange", length = 20)
+	var codeWithEx: String? = null,
+
+	/** 原始代码 **/
+	@Column(name = "last_update_date", length = 20)
+	var lastUpdateDate: String? = null
 ){
 	fun haveDataRate(): BigDecimal {
 		return downloadTimes?.let {

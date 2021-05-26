@@ -16,21 +16,64 @@ class ReceiveController(
 	val stockInfoPersistenceService: StockInfoPersistenceService,
 	val stockHistoryPersistenceService: StockHistoryPersistenceService
 ) {
+	data class Industry(
+			val code: String,
+			val date: String,
+			val codeName: String,
+			val industry: String,
+			val industryClassify: String,
+			var nakedCode: String? = null
+	)
+	@PostMapping("/industry")
+	fun industry(@RequestBody list: String) {
+		val industrys = list.split("],")
+		val industryList = mutableListOf<Industry>()
+		for (s in industrys) {
+			try {
+				val detail = s.split(",")
+				val industry = Industry(
+						date = detail[0].replace("[", "").replace("[", "").replace("\"", "").trim(),
+						code = detail[1].replace("*", "").replace("ST", "").replace("\"", "").trim(),
+						codeName = decode(detail[2].replace("\"", "")),
+						industry = decode(detail[3].replace("\"", "")),
+						industryClassify = decode(detail[4].replace("\"", ""))
+				).apply {
+					this.nakedCode = code.toNakedCode()
+				}
+				industryList.add(industry)
+			} catch (e: Exception) {
+				continue
+			}
+		}
+		stockInfoPersistenceService.queryAll()?.let {
+			for (stock in it) {
+				for (i in industryList) {
+					if (i.code == stock.codeName) {
+						stock.apply {
+							codeName = i.codeName
+							lastUpdateDate = i.date
+							codeWithEx = i.code
+							industry = i.industry
+							industryClassification = i.industryClassify
+						}
+						stockInfoPersistenceService.save(stock)
+						logger.info("stock $stock")
+						break
+					}
+				}
+			}
+		}
 
-//	private val stockSet = ThreadLocal<HashSet<String>>().also { it.set(getNullableSet()) }
+		logger.info("industrys = $industryList")
+	}
 	
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
-//		logger.info("uploadAllStock list ${list}")
-		
 		val a = list.split("],")
-//		logger.info("uploadAllStock a ${a}")
 		val c = mutableListOf<StockInfo>()
 		for (it in a) {
 			try {
-//				logger.info("uploadAllStock it ${it}")
 				val currentItem = it.split(",")
-//				logger.info("uploadAllStock currentItem ${currentItem}")
 				val info = StockInfo(
 					stockNo = currentItem[0].replace("[", "").replace("[", "").replace("[", "").replace("\"", "")
 						.toNakedCode(),
@@ -118,16 +161,6 @@ class ReceiveController(
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		}
-	}
-	
-	fun asciiToString(str: String): String {
-		val builder = StringBuffer()
-		val charArray = str.toCharArray()
-		for (s in charArray) {
-			val z = s as Int
-			builder.append(z as Char)
-		}
-		return builder.toString()
 	}
 	
 	companion object {
