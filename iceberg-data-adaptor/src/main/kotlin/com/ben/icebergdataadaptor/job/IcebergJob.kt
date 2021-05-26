@@ -8,8 +8,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Service
 class IcebergJob(
@@ -17,7 +20,7 @@ class IcebergJob(
 	val stockHistoryPersistence: StockHistoryPersistenceService,
 	val downloadService: StockHistoryDownloadService
 ) {
-	@Scheduled(cron = "0 7 10,23,1 * * ?")
+	@Scheduled(cron = "0 49 10,23,1 * * ?")
 	fun downloadAndPersistenceStockHistory() {
 		logger.info("start job to download stock history start = {}", LocalDateTime.now())
 		try {
@@ -30,11 +33,21 @@ class IcebergJob(
 					}
 					val stock = "${info.exchangeHouse}.${info.stockNo}"
 					val newestDate = stockHistoryPersistence.queryTheNewestDay(stock)
+					logger.info("newestDate = $newestDate and currentDay = $currentDay")
 					if (newestDate == currentDay) {
 						continue
 					}
 					val startDay = getTheStartDay(newestDate)
+					if (startDay > currentDay) {
+						continue
+					}
+					if (startDay == currentDay && LocalDateTime.now() < LocalDateTime.parse(
+							"${LocalDate.now()} 18:00:00",
+							DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+						)
+					) continue
 					if (rateLimiter.tryAcquire()) {
+						logger.info("startDay $startDay, endDay $currentDay")
 						downloadService.stockHistory(stock, startDay, currentDay)
 					}
 				}
@@ -46,7 +59,9 @@ class IcebergJob(
 	}
 	
 	private fun getTheStartDay(theNewestDate: String?): String {
-		return theNewestDate?.let { it } ?: THE_ANCIENT
+		return theNewestDate?.let {
+			LocalDate.parse(it, DateTimeFormatter.ofPattern("yyyy-MM-dd")).plusDays(1).toString()
+		} ?: THE_ANCIENT
 	}
 	
 	companion object {

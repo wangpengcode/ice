@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service
 class StockInfoPersistenceService(
     val stockInfoRepository: StockInfoRepository
 ) {
+	fun saveAll(entities: List<StockInfo>) = try {
+		stockInfoRepository.saveAll(entities)
+	} catch (e: Exception) {
+		logger.error("saveAll error", e)
+	}
 	fun save(entity: StockInfo) = try {
 		stockInfoRepository.save(entity)
 	} catch (e: Exception) {

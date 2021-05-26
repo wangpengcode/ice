@@ -22,10 +22,16 @@ class ReceiveController(
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
 		val a = list.replace("[","").replace("]","").split(',').deleteQuotation()
-		println(a)
+		logger.info("#uploadAllStock $a")
+		val insertBatch = mutableListOf<StockInfo>()
 		for(i in a) {
-			stockInfoPersistenceService.save(StockInfo(exchangeHouse = i.split(".")[0],  stockNo= i.split(".")[1]))
+			insertBatch.add(StockInfo(exchangeHouse = i.split(".")[0],  stockNo= i.split(".")[1]))
+			if (insertBatch.size == 20 ){
+				stockInfoPersistenceService.saveAll(insertBatch)
+				insertBatch.clear()
+			}
 		}
+		stockInfoPersistenceService.saveAll(insertBatch)
 	}
 	
 	@PostMapping("/history")
@@ -33,7 +39,7 @@ class ReceiveController(
 		val a = list.split("],")
 		// TODO need refactor.
 		var stockNo: String? = null
-		var list: MutableList<StockHistory> =  mutableListOf()
+		val list: MutableList<StockHistory> =  mutableListOf()
 		for (it in a) {
 			val b = it.replace("[[", "").replace("[", "")
 			val c = b.split(",").deleteQuotation()
@@ -62,6 +68,7 @@ class ReceiveController(
 			list.add(history)
 			if (list.size == 20) {
 				stockHistoryPersistenceService.saveAll(list)
+				list.clear()
 			}
 			stockNo = history.stockNo
 		}
