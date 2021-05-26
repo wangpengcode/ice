@@ -1,8 +1,6 @@
 package com.ben.icebergdataadaptor.webhook
 
-import com.ben.icebergdataadaptor.extensions.deleteQuotation
-import com.ben.icebergdataadaptor.extensions.getNullableSet
-import com.ben.icebergdataadaptor.extensions.toNakedCode
+import com.ben.icebergdataadaptor.extensions.*
 import com.ben.icebergdataadaptor.persistence.entity.StockHistory
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
 import com.ben.icebergdataadaptor.persistence.service.StockHistoryPersistenceService
@@ -23,17 +21,38 @@ class ReceiveController(
 	
 	@PostMapping("/all")
 	fun uploadAllStock(@RequestBody list: String) {
-		val a = list.replace("[", "").replace("]", "").split(',').deleteQuotation()
-		logger.info("#uploadAllStock $a")
-		val insertBatch = mutableListOf<StockInfo>()
-		for (i in a) {
-			insertBatch.add(StockInfo(exchangeHouse = i.split(".")[0], stockNo = i.split(".")[1]))
-			if (insertBatch.size == 20) {
-				stockInfoPersistenceService.saveAll(insertBatch)
-				insertBatch.clear()
+//		logger.info("uploadAllStock list ${list}")
+		
+		val a = list.split("],")
+//		logger.info("uploadAllStock a ${a}")
+		val c = mutableListOf<StockInfo>()
+		for (it in a) {
+			try {
+//				logger.info("uploadAllStock it ${it}")
+				val currentItem = it.split(",")
+//				logger.info("uploadAllStock currentItem ${currentItem}")
+				val info = StockInfo(
+					stockNo = currentItem[0].replace("[", "").replace("[", "").replace("[", "").replace("\"", "")
+						.toNakedCode(),
+					exchangeHouse = currentItem[0].split(".")[0].replace("[[\\", "").replace("\"", "").trim(),
+					codeName = decode(currentItem[1].replace("\"", "").replace("*", "").replace("ST", "").trim()),
+					ipoDate = currentItem[2],
+					outDate = currentItem[3],
+					type = currentItem[4],
+					ipoStatus = currentItem[5]
+				)
+				logger.info("uploadAllStock ${info}")
+				c.add(info)
+				if (c.size == 10) {
+					stockInfoPersistenceService.saveAll(c)
+					c.clear()
+				}
+			} catch (e: Exception) {
+				logger.error("error ", e)
 			}
 		}
-		stockInfoPersistenceService.saveAll(insertBatch)
+		if (list.isNotEmpty())
+			stockInfoPersistenceService.saveAll(c)
 	}
 	
 	@PostMapping("/history")
@@ -96,6 +115,16 @@ class ReceiveController(
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		}
+	}
+	
+	fun asciiToString(str: String): String {
+		val builder = StringBuffer()
+		val charArray = str.toCharArray()
+		for (s in charArray) {
+			val z = s as Int
+			builder.append(z as Char)
+		}
+		return builder.toString()
 	}
 	
 	companion object {

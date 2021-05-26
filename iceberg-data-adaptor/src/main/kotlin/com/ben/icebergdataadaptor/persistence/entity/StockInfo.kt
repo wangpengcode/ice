@@ -26,7 +26,27 @@ data class StockInfo(
 	
 	/** **/
 	@Column(name = "have_data_times", length = 20)
-	var haveDataTimes: String? = null
+	var haveDataTimes: String? = null,
+	
+	/** 证券名称 **/
+	@Column(name = "code_name", length = 60)
+	var codeName: String? = null,
+	
+	/** 上市日期 **/
+	@Column(name = "ipo_date", length = 20)
+	var ipoDate: String? = null,
+	
+	/** 退市日期 **/
+	@Column(name = "out_date", length = 20)
+	var outDate: String? = null,
+	
+	/** 证券类型，其中1：股票，2：指数,3：其它 **/
+	@Column(name = "type", length = 20)
+	var type: String? = null,
+	
+	/** 上市状态，其中1：上市，0：退市 **/
+	@Column(name = "ipo_status", length = 20)
+	var ipoStatus: String? = null
 ){
 	fun haveDataRate(): BigDecimal {
 		return downloadTimes?.let {
