@@ -33,7 +33,7 @@ class IcebergJob(
 					}
 					val stock = "${info.exchangeHouse}.${info.stockNo}"
 					val newestDate = stockHistoryPersistence.queryTheNewestDay(stock)
-					logger.info("newestDate = $newestDate and currentDay = $currentDay")
+//					logger.info("newestDate = $newestDate and currentDay = $currentDay")
 					if (newestDate == currentDay) {
 						continue
 					}
@@ -47,7 +47,7 @@ class IcebergJob(
 						)
 					) continue
 					if (rateLimiter.tryAcquire()) {
-						logger.info("startDay $startDay, endDay $currentDay")
+//						logger.info("startDay $startDay, endDay $currentDay")
 						downloadService.stockHistory(stock, startDay, currentDay)
 					}
 				}
