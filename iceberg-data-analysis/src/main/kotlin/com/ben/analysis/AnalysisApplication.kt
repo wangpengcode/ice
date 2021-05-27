@@ -1,11 +1,11 @@
-package com.ben.icebergpersistence
+package com.ben.analysis
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class IcebergPersistenceApplication
+class AnalysisApplication
 
 fun main(args: Array<String>) {
-    runApplication<IcebergPersistenceApplication>(*args)
+    runApplication<AnalysisApplication>(*args)
 }
