@@ -155,13 +155,9 @@ class ReceiveController(
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		} catch (e: Exception) {
-			when (e) {
-				is DataIntegrityViolationException -> {
-				}
-				else -> {
-					logger.error("history error", e)
-				}
-			}
+			if (e.message?.contains("key") == false)
+				logger.error("history error", e)
+
 			stockNo?.let {
 				val stockInfo = stockInfoPersistenceService.findByStockNo(it.toNakedCode()).apply {
 					this.downloadTimes =
