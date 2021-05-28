@@ -24,15 +24,15 @@ class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRep
 		throw e
 	}
 	
-	fun queryTheOldestDay(stockNo: String) = try {
-		stockHistoryRepository.queryTheOldestDay(stockNo)
+	fun queryTheOldestDay(stockNo: String, code: String) = try {
+		stockHistoryRepository.queryTheOldestDay(stockNo,code)
 	} catch (e: Exception) {
 		logger.error("#queryTheOldestDay error", e)
 		null
 	}
 	
-	fun queryTheNewestDay(stockNo: String) = try {
-		stockHistoryRepository.queryTheNewestDay(stockNo)
+	fun queryTheNewestDay(stockNo: String,code: String) = try {
+		stockHistoryRepository.queryTheNewestDay(stockNo,code)
 	} catch (e: Exception) {
 		logger.error("#queryTheNewestDay error", e)
 		null

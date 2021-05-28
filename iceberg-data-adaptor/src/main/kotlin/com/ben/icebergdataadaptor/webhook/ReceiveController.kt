@@ -136,7 +136,7 @@ class ReceiveController(
 					isST = c[17].replace("]]", "")
 				)
 				list.add(history)
-				if (list.size == 80) {
+				if (list.size == 40) {
 					stockHistoryPersistenceService.saveAll(list)
 					list.clear()
 				}
@@ -154,6 +154,7 @@ class ReceiveController(
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		} catch (e: Exception) {
+			logger.error("history error", e)
 			stockNo?.let {
 				val stockInfo = stockInfoPersistenceService.findByStockNo(it.toNakedCode()).apply {
 					this.downloadTimes =
