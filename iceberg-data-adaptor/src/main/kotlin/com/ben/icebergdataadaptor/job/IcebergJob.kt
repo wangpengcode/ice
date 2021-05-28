@@ -21,7 +21,7 @@ class IcebergJob(
         val stockHistoryPersistence: StockHistoryPersistenceService,
         val downloadService: StockHistoryDownloadService
 ) {
-    @Scheduled(cron = "0 2 18,21,0 * * ?")
+    @Scheduled(cron = "0 7 18,21,0 * * ?")
     fun downloadAndPersistenceStockHistory() {
         logger.info("start job to download stock history start = {}", LocalDateTime.now())
         try {
@@ -66,7 +66,7 @@ class IcebergJob(
     }
 
     private fun ipoDate(info: StockInfo, oldestDay: String?): String? {
-        val ipoDate = info.ipoDate?.replace("\"", "")
+        val ipoDate = info.ipoDate?.replace("\"", "")?.trim()
         return if (ipoDate != null && ipoDate.isNotBlank()) {
             val ipoDateStr = LocalDate.parse(ipoDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")).plusDays(30).toString()
             if (ipoDateStr < (oldestDay ?: "")) {
