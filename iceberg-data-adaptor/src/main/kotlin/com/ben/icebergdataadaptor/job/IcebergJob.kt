@@ -47,10 +47,10 @@ class IcebergJob(
 							DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 						)
 					) continue
-					if (rateLimiter.tryAcquire()) {
+//					if (rateLimiter.tryAcquire()) {
 //						logger.info("startDay $startDay, endDay $currentDay")
 						downloadService.stockHistory(stock, startDay, currentDay)
-					}
+//					}
 				}
 			}
 		} catch (e: Exception) {

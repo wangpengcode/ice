@@ -50,6 +50,7 @@ class ReceiveController(
 				for (i in industryList) {
 					if (i.nakedCode == stock.stockNo) {
 						stock.apply {
+							codeWithEx = i.code
 							codeName = i.codeName
 							lastUpdateDate = i.date
 							codeWithEx = i.code
