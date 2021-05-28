@@ -7,6 +7,7 @@ import com.ben.icebergdataadaptor.persistence.service.StockHistoryPersistenceSer
 import com.ben.icebergdataadaptor.persistence.service.StockInfoPersistenceService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 
@@ -154,7 +155,13 @@ class ReceiveController(
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		} catch (e: Exception) {
-			logger.error("history error", e)
+			when (e) {
+				is DataIntegrityViolationException -> {
+				}
+				else -> {
+					logger.error("history error", e)
+				}
+			}
 			stockNo?.let {
 				val stockInfo = stockInfoPersistenceService.findByStockNo(it.toNakedCode()).apply {
 					this.downloadTimes =

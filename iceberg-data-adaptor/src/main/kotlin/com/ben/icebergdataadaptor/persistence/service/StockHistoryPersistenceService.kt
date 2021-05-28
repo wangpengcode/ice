@@ -5,6 +5,7 @@ import com.ben.icebergdataadaptor.persistence.repository.StockHistoryRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import java.math.BigInteger
 
 @Service
 class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRepository) {
@@ -24,14 +25,14 @@ class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRep
 		throw e
 	}
 	
-	fun queryTheOldestDay(stockNo: String, code: String) = try {
+	fun queryTheOldestDay(stockNo: String, code: BigInteger) = try {
 		stockHistoryRepository.queryTheOldestDay(stockNo,code)
 	} catch (e: Exception) {
 		logger.error("#queryTheOldestDay error", e)
 		null
 	}
 	
-	fun queryTheNewestDay(stockNo: String,code: String) = try {
+	fun queryTheNewestDay(stockNo: String,code: BigInteger) = try {
 		stockHistoryRepository.queryTheNewestDay(stockNo,code)
 	} catch (e: Exception) {
 		logger.error("#queryTheNewestDay error", e)
