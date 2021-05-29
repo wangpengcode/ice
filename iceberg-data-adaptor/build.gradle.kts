@@ -15,6 +15,12 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 repositories {
     mavenCentral()
 }
+kotlin {
+    experimental {
+        coroutines
+        "enable"
+    }
+}
 
 dependencies {
     api("org.springframework.boot:spring-boot-starter-jdbc")
