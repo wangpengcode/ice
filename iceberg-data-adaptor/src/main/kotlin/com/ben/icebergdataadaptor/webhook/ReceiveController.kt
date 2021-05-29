@@ -1,20 +1,17 @@
 package com.ben.icebergdataadaptor.webhook
 
-import com.ben.icebergdataadaptor.extensions.decode
-import com.ben.icebergdataadaptor.extensions.deleteQuotation
-import com.ben.icebergdataadaptor.extensions.isNotEmpty
-import com.ben.icebergdataadaptor.extensions.toNakedCode
+import com.ben.icebergdataadaptor.extensions.*
 import com.ben.icebergdataadaptor.persistence.entity.StockHistory
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
 import com.ben.icebergdataadaptor.persistence.service.StockHistoryPersistenceService
 import com.ben.icebergdataadaptor.persistence.service.StockInfoPersistenceService
+import com.ben.icebergdataadaptor.transfer.toIndustry
+import com.ben.icebergdataadaptor.transfer.toStockHistory
+import com.ben.icebergdataadaptor.transfer.toStockInfo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 
 @RestController
@@ -38,13 +35,7 @@ class ReceiveController(
 		for (s in industrys) {
 			try {
 				val detail = s.split(",")
-				val industry = Industry(
-						date = detail[0].replace("[", "").replace("[", "").replace("\"", "").trim(),
-						code = detail[1].replace("*", "").replace("ST", "").replace("\"", "").trim(),
-						codeName = decode(detail[2].replace("\"", "")),
-						industry = decode(detail[3].replace("\"", "")),
-						industryClassify = decode(detail[4].replace("\"", ""))
-				).apply {
+				val industry = detail.toIndustry().apply {
 					this.nakedCode = code.toNakedCode()
 				}
 				industryList.add(industry)
@@ -52,11 +43,14 @@ class ReceiveController(
 				continue
 			}
 		}
+		val mappingData = mutableListOf<Industry>()
 		stockInfoPersistenceService.queryAll()?.let {
 			for (stock in it) {
 				for (i in industryList) {
 					if (i.nakedCode == stock.stockNo) {
+						mappingData.add(i)
 						stock.apply {
+							exchangeHouse = i.code.split(".")[0].removeIllegalChar()
 							codeWithEx = i.code
 							codeName = i.codeName
 							lastUpdateDate = i.date
@@ -71,7 +65,18 @@ class ReceiveController(
 				}
 			}
 		}
-
+		val more = industryList - mappingData
+		try {
+			val moreList = mutableListOf<StockInfo>()
+			for (m in more) {
+				moreList.add(m.toStockInfo())
+			}
+			moreList.chunked(20).forEach {
+				stockInfoPersistenceService.saveAll(it)
+			}
+		} catch (e: Exception) {
+			logger.error("have mor industry don't save ${more}")
+		}
 		logger.info("industrys = $industryList")
 	}
 	
@@ -82,100 +87,63 @@ class ReceiveController(
 		for (it in a) {
 			try {
 				val currentItem = it.split(",")
-				val info = StockInfo(
-					stockNo = currentItem[0].replace("[", "").replace("[", "").replace("[", "").replace("\"", "")
-						.toNakedCode(),
-					exchangeHouse = currentItem[0].split(".")[0].replace("[[\\", "").replace("\"", "").trim(),
-					codeName = decode(
-						currentItem[1].replace("\"", "").replace("*", "").replace("ST", "").replace("\"", "")
-							.replace("\"", "").trim()
-					),
-					ipoDate = currentItem[2],
-					outDate = currentItem[3],
-					type = currentItem[4],
-					ipoStatus = currentItem[5]
-				)
+				val info = currentItem.toStockInfo()
 				logger.info("uploadAllStock ${info}")
 				c.add(info)
-				if (c.size == 10) {
+				if (c.size == 100) {
 					stockInfoPersistenceService.saveAll(c)
 					c.clear()
 				}
 			} catch (e: Exception) {
+				stockInfoPersistenceService.saveAll(c)
+				c.clear()
 				logger.error("error ", e)
+				continue
 			}
 		}
 		if (list.isNotEmpty())
 			stockInfoPersistenceService.saveAll(c)
 	}
-
+	
 	@PostMapping("/history")
-	@Async(value = "asyncExecutor")
-	fun history(@RequestBody body: String) {
+	@Async("asyncExecutor")
+	fun history(@RequestBody list: String) {
 		var stockNo: String? = null
 		try {
-			val rawData = body.split("],")
-			// TODO need refactor.
-
-			val list: MutableList<StockHistory> = mutableListOf()
-			for (line in rawData) {
-				var line = line.replace("[[","")
-				val b = line.replace("[[", "").replace("[", "")
-				val c = b.split(",").deleteQuotation()
-				val history = StockHistory(
-						date = c[0],
-						code = c[1].replace("sh.", "").replace("sz.", "").replace("\"", "").replace(" ", "").toBigInteger(),
-						stockNo = c[1],
-						open = c[2],
-						high = c[3],
-						low = c[4],
-						close = c[5],
-						preclose = c[6],
-						volume = c[7],
-						amount = c[8],
-						adjustflag = c[9],
-						turn = c[10],
-						tradestatus = c[11],
-						pctChg = c[12],
-						peTTM = c[13],
-						pbMRQ = c[14],
-						psTTM = c[15],
-						pcfNcfTTM = c[16],
-						isST = c[17].replace("]]", "")
-				)
-				list.add(history)
-				if (list.size == 50) {
-					stockHistoryPersistenceService.saveAll(list)
-					list.clear()
+			val lines = list.split("],")
+			val tempList: MutableList<StockHistory> = mutableListOf()
+			for (line in lines) {
+				val dataOfOneDate = line.replace("[[", "").replace("[", "")
+				val fields = dataOfOneDate.split(",").deleteQuotation()
+				val history = fields.toStockHistory()
+				tempList.add(history)
+				if (tempList.size == 80) {
+					stockHistoryPersistenceService.saveAll(tempList)
+					tempList.clear()
 				}
 				stockNo = history.stockNo
 			}
-			stockHistoryPersistenceService.saveAll(list)
+			stockHistoryPersistenceService.saveAll(tempList)
 			logger.info("#history download stock = $stockNo, already download!")
 			stockNo?.let {
 				val stockInfo = stockInfoPersistenceService.findByStockNo(it.toNakedCode()).apply {
-					this.downloadTimes =
-							BigDecimal.ONE.add(this.downloadTimes?.toBigDecimalOrNull()
-									?: BigDecimal.ZERO).toString()
-					this.haveDataTimes =
-							BigDecimal.ONE.add(this.downloadTimes?.toBigDecimalOrNull()
-									?: BigDecimal.ZERO).toString()
+					this.downloadTimes = valuePlusOne(this.downloadTimes)
+					this.haveDataTimes = valuePlusOne(this.haveDataTimes)
 				}
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		} catch (e: Exception) {
-			if (e.message?.contains("key") == false)
-				logger.error("history error", e)
-
 			stockNo?.let {
 				val stockInfo = stockInfoPersistenceService.findByStockNo(it.toNakedCode()).apply {
-					this.downloadTimes =
-							BigDecimal.ONE.add(this.downloadTimes?.toBigDecimalOrNull()
-									?: BigDecimal.ZERO).toString()
+					this.downloadTimes = valuePlusOne(this.downloadTimes)
 				}
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		}
+	}
+	
+	private fun valuePlusOne(value: String?) : String {
+		return BigDecimal.ONE.add(value?.toBigDecimalOrNull() ?: BigDecimal.ZERO).toString()
 	}
 	
 	companion object {

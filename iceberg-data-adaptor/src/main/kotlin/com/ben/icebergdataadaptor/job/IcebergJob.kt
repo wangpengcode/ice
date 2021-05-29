@@ -29,12 +29,12 @@ class IcebergJob(
             val stockList = stockInfoPersistence.queryAll()?.sortedByDescending { it.haveDataTimes }
             stockList?.let {
                 for (info in it) {
-                    val stock = "${info.exchangeHouse}.${info.stockNo}"
+                    val stock = "${info.exchangeHouse.replace("[","").replace("[","").trim()}.${info.stockNo}"
                     val newestDate = stockHistoryPersistence.queryTheNewestDay(stock, info.stockNo.toBigInteger())
                     if (newestDate == currentDay) {
                         continue
                     }
-                    var startDay = getTheStartDay(newestDate)
+                    val startDay = getTheStartDay(newestDate)
                     if (startDay > currentDay) {
                         continue
                     }
@@ -43,6 +43,7 @@ class IcebergJob(
                                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                             )
                     ) continue
+//                    logger.info("start download $stock")
                     downloadService.stockHistory(stock, startDay, currentDay)
                 }
             }

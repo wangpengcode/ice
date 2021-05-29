@@ -14,7 +14,7 @@ data class StockInfo(
 	
 	/** **/
 	@Column(name = "exchange_house", length = 10)
-	val exchangeHouse: String,
+	var exchangeHouse: String,
 	
 	/** **/
 	@Column(name = "status", length = 20)
