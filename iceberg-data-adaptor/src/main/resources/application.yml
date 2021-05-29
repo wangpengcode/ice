@@ -15,4 +15,20 @@ spring:
     password: postgres
 schedule:
   job:
-    history: 0 45 17,21,8 * * ?
+    history: 0 3 17,21,8 * * ?
+# 自定义异步任务线程池
+async-task:
+  # 核心线程池大小
+  corePoolSize: 20
+  # 最大线程数大小
+  maximumPoolSize: 40
+  # 活跃时间：秒
+  keepAliveSeconds: 300
+  # 线程等待队列大小
+  queueCapacity: 50
+  # 自定义线程名称前缀
+  threadNamePrefix: Async-Task-
+  # 设置终止等待时间：秒
+  awaitTerminationTime: 60
+  # 线程结束前，是否等待线程队列中的任务执行完成
+  waitTasksComplete: true

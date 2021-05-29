@@ -110,21 +110,19 @@ class ReceiveController(
 	}
 
 	@PostMapping("/history")
-	@Async
-	fun history(@RequestBody list: String) {
-//		val scope = CoroutineScope(Dispatchers.Main+ Job())
-//		scope.launch {
+	@Async(value = "asyncExecutor")
+	fun history(@RequestBody body: String) {
 		var stockNo: String? = null
 		try {
-			val a = list.split("],")
+			val rawData = body.split("],")
 			// TODO need refactor.
 
 			val list: MutableList<StockHistory> = mutableListOf()
-			for (it in a) {
-				val b = it.replace("[[", "").replace("[", "")
+			for (line in rawData) {
+				var line = line.replace("[[","")
+				val b = line.replace("[[", "").replace("[", "")
 				val c = b.split(",").deleteQuotation()
 				val history = StockHistory(
-//				id = c[0] + c[1],
 						date = c[0],
 						code = c[1].replace("sh.", "").replace("sz.", "").replace("\"", "").replace(" ", "").toBigInteger(),
 						stockNo = c[1],
@@ -178,7 +176,6 @@ class ReceiveController(
 				stockInfoPersistenceService.save(stockInfo)
 			}
 		}
-//		}
 	}
 	
 	companion object {
