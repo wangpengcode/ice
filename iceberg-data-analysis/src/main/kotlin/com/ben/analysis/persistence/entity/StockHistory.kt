@@ -36,7 +36,7 @@ data class StockHistory(
 	
 	/** 最低价 **/
 	@Column(name = "low", length = 20)
-	val low: String,
+	val low: String? = null,
 	
 	/** 收盘价 **/
 	@Column(name = "close", length = 20)

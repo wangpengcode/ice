@@ -21,7 +21,7 @@ class StockInfoPersistenceService(
 		logger.error("#save error:", e)
 	}
 	
-	fun findByStockNo(stockNo: String): StockInfo {
+	fun findByStockNo(stockNo: String): StockInfo? {
 		return stockInfoRepository.findByStockNo(stockNo)
 	}
 	

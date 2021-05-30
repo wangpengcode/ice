@@ -14,4 +14,7 @@ interface StockHistoryRepository : CrudRepository<StockHistory, String> {
 
 	@Query("from StockHistory a where a.stockNo = ?1")
 	fun queryHistoryByStockNo(stockNo: String): List<StockHistory>?
+
+	@Query("from StockHistory a where a.stockNo = ?1 order by a.date desc")
+	fun queryTheNewestHistory(stockNo: String): List<StockHistory>
 }
