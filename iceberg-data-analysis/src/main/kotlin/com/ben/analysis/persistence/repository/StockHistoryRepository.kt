@@ -11,4 +11,7 @@ interface StockHistoryRepository : CrudRepository<StockHistory, String> {
 	
 	@Query("select max(a.date) from StockHistory a where a.stockNo = ?1")
 	fun queryTheNewestDay(stockNo: String): String?
+
+	@Query("from StockHistory a where a.stockNo = ?1")
+	fun queryHistoryByStockNo(stockNo: String): List<StockHistory>?
 }

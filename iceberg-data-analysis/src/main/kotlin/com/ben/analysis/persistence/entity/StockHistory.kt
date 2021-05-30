@@ -68,7 +68,7 @@ data class StockHistory(
 	
 	/** '涨跌幅（百分比） **/
 	@Column(name = "pct_chg", length = 20)
-	val pctChg: String,
+	val pctChg: String?=null,
 	
 	/** 滚动市盈率 **/
 	@Column(name = "pe_ttm", length = 20)

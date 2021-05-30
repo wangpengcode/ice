@@ -13,3 +13,24 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres?useSSL=false&serverTimezone=UTC
     username: postgres
     password: postgres
+
+schedule:
+  job:
+    superstar: 0 14 22,23,16 * * ?
+
+# 自定义异步任务线程池
+async-task:
+  # 核心线程池大小
+  corePoolSize: 15
+  # 最大线程数大小
+  maximumPoolSize: 60
+  # 活跃时间：秒
+  keepAliveSeconds: 300
+  # 线程等待队列大小
+  queueCapacity: 2000
+  # 自定义线程名称前缀
+  threadNamePrefix: Async-Task-
+  # 设置终止等待时间：秒
+  awaitTerminationTime: 60
+  # 线程结束前，是否等待线程队列中的任务执行完成
+  waitTasksComplete: true
