@@ -10,12 +10,12 @@ spring:
       minimum-idle: 2
       idle-timeout: 60000 # 1 MIN
       max-lifetime: 600000 # 10 MIN
-    url: jdbc:postgresql://localhost:5433/postgres?useSSL=false&serverTimezone=UTC
+    url: jdbc:postgresql://localhost:5432/postgres?useSSL=false&serverTimezone=UTC
     username: postgres
     password: postgres
 schedule:
   job:
-    history: 0 15 17,23,8 * * ?
+    history: 0 20 17,23,11 * * ?
 # 自定义异步任务线程池
 async-task:
   # 核心线程池大小

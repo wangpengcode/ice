@@ -13,7 +13,7 @@ class BaoStockController(val baoStockApi: BaoStockApi) {
 	
 	@GetMapping("/python")
 	fun test(): String {
-		baoStockApi.executeDownloadAllStockByDay(LocalDate.now().toString())
+		baoStockApi.executeDownloadAllStockByDay(LocalDate.now().plusDays(-2).toString())
 		return "hello"
 	}
 
