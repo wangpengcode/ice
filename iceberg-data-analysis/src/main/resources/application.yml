@@ -1,5 +1,5 @@
 server:
-  port: 19882
+  port: 19881
 spring:
   application:
     name: iceberg-data-analysis
@@ -17,7 +17,7 @@ spring:
 schedule:
   job:
     superstar: 0 0 22,23 * * ?
-    stockwords: 0 15 22,23 * * ?
+    stockwords: 0 26 22,23 * * ?
 
 # 自定义异步任务线程池
 async-task:

@@ -30,7 +30,7 @@ class StockWordsService(
                     val newestHistory = stockNo?.let { it ->
                         stockHistoryRepository.queryTheNewestHistory(it).sortedByDescending { it.date }.first()
                     } ?: continue
-                    val stockInfo = stockInfoRepository.findByStockNo(stockNo)
+                    val stockInfo = stockInfoRepository.findByCodeWithEx(stockNo)
                     newestHistory.let {
                         if (it.low !== null && isWords(it.low.toBigDecimal())) {
                             val words = it.toStockWords(
