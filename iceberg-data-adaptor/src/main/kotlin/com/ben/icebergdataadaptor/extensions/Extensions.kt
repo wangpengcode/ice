@@ -97,3 +97,15 @@ fun decode(encodeText: String): String {
     val unicodes = encodeText.split("\\u")
         .map { if (it.isNotBlank()) decode1(it) else null }.filterNotNull()
     return String(unicodes.toCharArray())}
+
+fun String.removeIllegalChar(): String = this
+    .replace("[","")
+    .replace("[","")
+    .replace("\"","")
+    .replace("\"","")
+    .replace("]","")
+    .replace("]","")
+    .replace("]","")
+    .replace("*","")
+    .replace("ST","")
+    .trim()

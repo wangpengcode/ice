@@ -7,6 +7,7 @@ import json
 
 stock_list = []
 webhook = ''
+headers = {'Connection':'close'}
 def download_data(stock,webhook,start_day,end_day):
     bs.login()
 
@@ -19,9 +20,11 @@ def download_data(stock,webhook,start_day,end_day):
         data_list.append(stock_rs.get_row_data())
 #     result = pd.DataFrame(data_list, columns=rs.fields)
     bs.logout()
-    requests.post(url=webhook,data=json.dumps(data_list))
+    requests.post(url=webhook,data=json.dumps(data_list),timeout=30,headers=headers)
 
 if __name__ == '__main__':
+    s = requests.session()
+    s.keep_alive = False
     # 如果不指定日期，则获取三天前的股票列表,由于在周末调用该接口会报错
     end_day = None
     start_day = ''

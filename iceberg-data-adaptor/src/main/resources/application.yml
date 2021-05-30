@@ -10,6 +10,25 @@ spring:
       minimum-idle: 2
       idle-timeout: 60000 # 1 MIN
       max-lifetime: 600000 # 10 MIN
-    url: jdbc:postgresql://localhost:5432/postgres?useSSL=false&serverTimezone=UTC
+    url: jdbc:postgresql://localhost:5433/postgres?useSSL=false&serverTimezone=UTC
     username: postgres
     password: postgres
+schedule:
+  job:
+    history: 0 45 17,23,7 * * ?
+# 自定义异步任务线程池
+async-task:
+  # 核心线程池大小
+  corePoolSize: 18
+  # 最大线程数大小
+  maximumPoolSize: 40
+  # 活跃时间：秒
+  keepAliveSeconds: 300
+  # 线程等待队列大小
+  queueCapacity: 50
+  # 自定义线程名称前缀
+  threadNamePrefix: Async-Task-
+  # 设置终止等待时间：秒
+  awaitTerminationTime: 60
+  # 线程结束前，是否等待线程队列中的任务执行完成
+  waitTasksComplete: true
