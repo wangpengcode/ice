@@ -15,11 +15,11 @@ spring:
     password: postgres
 schedule:
   job:
-    history: 0 45 17,23,7 * * ?
+    history: 0 15 17,23,8 * * ?
 # 自定义异步任务线程池
 async-task:
   # 核心线程池大小
-  corePoolSize: 18
+  corePoolSize: 20
   # 最大线程数大小
   maximumPoolSize: 40
   # 活跃时间：秒
