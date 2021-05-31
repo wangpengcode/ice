@@ -1,5 +1,6 @@
 package com.ben.analysis.service
 
+import com.ben.analysis.persistence.entity.StockHistory
 import com.ben.analysis.persistence.entity.StockWords
 import com.ben.analysis.persistence.repository.StockHistoryRepository
 import com.ben.analysis.persistence.repository.StockInfoRepository
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.text.DecimalFormat
 
 @Service
@@ -18,6 +20,7 @@ class StockWordsService(
         val stockHistoryRepository: StockHistoryRepository,
         val stockWordsRepository: StockWordsRepository
 ) {
+    val logger: Logger = LoggerFactory.getLogger(StockWordsService::class.java)
     @Async(value = "asyncExecutor")
     fun stockWords() {
         val stocks = stockInfoRepository.findStocks()
@@ -53,6 +56,34 @@ class StockWordsService(
             stockWordsRepository.saveAll(stockWordsList)
     }
 
+    @Async(value = "asyncExecutor")
+    fun checkWordsValid(lastWords: StockWords) {
+        try {
+            val newestHistory = stockHistoryRepository.queryTheNewestHistory(lastWords.code_with_ex)
+                    .sortedByDescending { it.date }.first()
+            if (newestHistory.date > lastWords.date && isValidStockWords(lastWords, newestHistory)) {
+                lastWords.apply {
+                    last_day = this.last_day?.let { it.add(BigInteger.ONE) } ?: BigInteger.ONE
+                }
+                stockWordsRepository.save(lastWords)
+            }
+
+            if (newestHistory.date > lastWords.date && !isValidStockWords(lastWords, newestHistory)) {
+                lastWords.apply {
+                    words_is_valid = false
+                }
+                stockWordsRepository.save(lastWords)
+            }
+
+        } catch (e: Exception) {
+            logger.info("#checkWordsValid error",e)
+        }
+    }
+    
+    fun isValidStockWords(lastWords: StockWords, currentHistory: StockHistory): Boolean {
+        return (lastWords.lowest?.toDouble() ?: 0.0 <= currentHistory.low?.toDouble() ?: 0.0)
+    }
+
     fun isWords(amount: BigDecimal): Boolean {
         val format = DecimalFormat("#.00").format(amount)
         val intValue = format.split(".")[0]
@@ -64,9 +95,5 @@ class StockWordsService(
         } else {
             char1 == char2
         }
-    }
-
-    companion object {
-        val logger: Logger = LoggerFactory.getLogger(StockWordsService::class.java)
     }
 }

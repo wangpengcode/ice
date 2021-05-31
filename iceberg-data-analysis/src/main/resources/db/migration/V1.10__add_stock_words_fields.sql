@@ -1,0 +1,1 @@
+alter table stock_words add column last_day Bigint default null;

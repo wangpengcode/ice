@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 class Configurations {
 	var superstar: String = " 0 38 17,21,8 * * ?"
 	var stockwords: String = " 0 38 17,21,8 * * ?"
+	var stockwordvalidate: String = " 0 38 17,21,8 * * ?"
 
 	@Bean
 	fun superStarCron(): String{
@@ -18,5 +19,10 @@ class Configurations {
 	@Bean
 	fun stockWordsCron(): String{
 		return stockwords
+	}
+
+	@Bean
+	fun stockWordsValidateCron(): String{
+		return stockwordvalidate
 	}
 }

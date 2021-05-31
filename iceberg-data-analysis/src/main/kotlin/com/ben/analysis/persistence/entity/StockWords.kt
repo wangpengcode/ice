@@ -29,11 +29,14 @@ data class StockWords(
         var lowest: String? = null,
 
         @Column(name = "words_is_valid", length = 10)
-        var words_is_valid: Boolean = false,
+        var words_is_valid: Boolean = true,
 
         @Column(name = "is_st", length = 10)
         var is_st: Boolean = false,
 
         @Column(name = "out_standing", length = 64)
-        var out_standing: String? = null
+        var out_standing: String? = null,
+
+        @Column(name = "last_day", length = 64)
+        var last_day: BigInteger? = null
 )
