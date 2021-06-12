@@ -159,6 +159,7 @@ class ReceiveController(
 			val profit = if (rawList.size > 2) {
 				rawList.toProfitQuarter()
 			} else {
+				logger.info("#quarterProfit skip with empty.")
 				return
 			}
 //			logger.info("${profit.toJson()}")
