@@ -16,6 +16,7 @@ spring:
 schedule:
   job:
     history: 0 0 19,20,21,22 * * ?
+    profit: 0 0 23 * * ?
 # 自定义异步任务线程池
 async-task:
   # 核心线程池大小

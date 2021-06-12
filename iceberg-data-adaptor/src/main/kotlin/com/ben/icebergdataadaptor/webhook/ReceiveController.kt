@@ -3,9 +3,11 @@ package com.ben.icebergdataadaptor.webhook
 import com.ben.icebergdataadaptor.extensions.*
 import com.ben.icebergdataadaptor.persistence.entity.StockHistory
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
+import com.ben.icebergdataadaptor.persistence.service.QuarterProfitPersistenceService
 import com.ben.icebergdataadaptor.persistence.service.StockHistoryPersistenceService
 import com.ben.icebergdataadaptor.persistence.service.StockInfoPersistenceService
 import com.ben.icebergdataadaptor.transfer.toIndustry
+import com.ben.icebergdataadaptor.transfer.toProfitQuarter
 import com.ben.icebergdataadaptor.transfer.toStockHistory
 import com.ben.icebergdataadaptor.transfer.toStockInfo
 import org.slf4j.Logger
@@ -19,16 +21,18 @@ import java.time.LocalDate
 @RequestMapping("/file/upload")
 class ReceiveController(
 	val stockInfoPersistenceService: StockInfoPersistenceService,
-	val stockHistoryPersistenceService: StockHistoryPersistenceService
+	val stockHistoryPersistenceService: StockHistoryPersistenceService,
+	val profitService: QuarterProfitPersistenceService
 ) {
 	data class Industry(
-			val code: String,
-			val date: String,
-			val codeName: String,
-			val industry: String,
-			val industryClassify: String,
-			var nakedCode: String? = null
+		val code: String,
+		val date: String,
+		val codeName: String,
+		val industry: String,
+		val industryClassify: String,
+		var nakedCode: String? = null
 	)
+	
 	@PostMapping("/industry")
 	fun industry(@RequestBody list: String) {
 		val industrys = list.split("],")
@@ -146,7 +150,26 @@ class ReceiveController(
 		}
 	}
 	
-	private fun valuePlusOne(value: String?) : String {
+	@PostMapping("/profit")
+	@Async("asyncExecutor")
+	fun quarterProfit(@RequestBody rawData: String) {
+		try {
+//			logger.info("${rawData.toJson()}")
+			val rawList = rawData.split(",")
+			val profit = if (rawList.size > 2) {
+				rawList.toProfitQuarter()
+			} else {
+				return
+			}
+//			logger.info("${profit.toJson()}")
+			profitService.save(profit)
+			logger.info("#quarterProfit ${profit.code} have download ${profit.statDate}")
+		} catch (e: Exception) {
+			logger.error("ReceiveController#quarterProfit error:", e)
+		}
+	}
+	
+	private fun valuePlusOne(value: String?): String {
 		return BigDecimal.ONE.add(value?.toBigDecimalOrNull() ?: BigDecimal.ZERO).toString()
 	}
 	

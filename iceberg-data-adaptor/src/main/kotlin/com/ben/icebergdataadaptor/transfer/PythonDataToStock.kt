@@ -3,10 +3,12 @@ package com.ben.icebergdataadaptor.transfer
 import com.ben.icebergdataadaptor.extensions.decode
 import com.ben.icebergdataadaptor.extensions.removeIllegalChar
 import com.ben.icebergdataadaptor.extensions.toNakedCode
+import com.ben.icebergdataadaptor.persistence.entity.ProfitQuarter
 import com.ben.icebergdataadaptor.persistence.entity.StockHistory
 import com.ben.icebergdataadaptor.persistence.entity.StockInfo
 import com.ben.icebergdataadaptor.webhook.ReceiveController
 import java.time.LocalDate
+import javax.persistence.Column
 
 /**
  * The order should mapping with the data of the python api.
@@ -65,4 +67,16 @@ fun ReceiveController.Industry.toStockInfo() = StockInfo(
 	industryClassification = industryClassify,
 	codeWithEx = code,
 	lastUpdateDate = LocalDate.now().toString()
+)
+
+fun List<String>.toProfitQuarter() = ProfitQuarter(
+	code = this[0].removeIllegalChar(),
+	pubDate = this[1].removeIllegalChar(),
+	statDate = this[2].removeIllegalChar(),
+	NRTurnRatio = this[3].removeIllegalChar(),
+	NRTurnDays = this[4].removeIllegalChar(),
+	INVTurnRatio = this[5].removeIllegalChar(),
+	INVTurnDays = this[6].removeIllegalChar(),
+	CATurnRatio = this[7].removeIllegalChar(),
+	AssetTurnRatio = this[8].removeIllegalChar()
 )
