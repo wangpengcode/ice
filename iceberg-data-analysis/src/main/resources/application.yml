@@ -10,7 +10,7 @@ spring:
       minimum-idle: 2
       idle-timeout: 60000 # 1 MIN
       max-lifetime: 600000 # 10 MIN
-    url: jdbc:postgresql://localhost:5432/postgres?useSSL=false&serverTimezone=UTC
+    url: jdbc:postgresql://localhost:5433/postgres?useSSL=false&serverTimezone=UTC
     username: postgres
     password: postgres
 
