@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/file/upload")
@@ -109,6 +110,7 @@ class ReceiveController(
 	@Async("asyncExecutor")
 	fun history(@RequestBody list: String) {
 		var stockNo: String? = null
+		val currentDay = LocalDate.now().toString()
 		try {
 			val lines = list.split("],")
 			val tempList: MutableList<StockHistory> = mutableListOf()
@@ -129,6 +131,8 @@ class ReceiveController(
 				val stockInfo = stockInfoPersistenceService.findByStockNo(it.toNakedCode()).apply {
 					this.downloadTimes = valuePlusOne(this.downloadTimes)
 					this.haveDataTimes = valuePlusOne(this.haveDataTimes)
+					this.lastDownloadAt = currentDay
+					this.isDownload = true
 				}
 				stockInfoPersistenceService.save(stockInfo)
 			}

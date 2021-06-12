@@ -62,7 +62,14 @@ data class StockInfo(
 
 	/** 原始代码 **/
 	@Column(name = "last_update_date", length = 20)
-	var lastUpdateDate: String? = null
+	var lastUpdateDate: String? = null,
+	
+	
+	@Column(name = "is_download", length = 10)
+	var isDownload: Boolean = false,
+	
+	@Column(name = "last_download_at", length = 10)
+	var lastDownloadAt: String? = null,
 ){
 	fun haveDataRate(): BigDecimal {
 		return downloadTimes?.let {
