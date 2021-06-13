@@ -1,5 +1,6 @@
 package com.ben.icebergdataadaptor.infra.service
 
+import com.ben.icebergdataadaptor.constant.Constants
 import com.ben.icebergdataadaptor.extensions.executeAsRuntimeCmd
 import com.ben.icebergdataadaptor.webhook.WebHookUrl
 import org.slf4j.Logger
@@ -13,7 +14,7 @@ class StockHistoryDownloadService {
 		try {
 			// TODO need enhance the file path.
 			var cmd =
-				"python3 /Users/wangpeng/Documents/code/sleep-down/ice/iceberg-data-adaptor/src/main/kotlin/com/ben/icebergdataadaptor/infra/py/StockHistory.py ${WebHookUrl.BAO_STOCK_STOCK_HISTORY}"
+				"python3 ${Constants.SYSTEM_PREFIX}${Constants.PROJECT_PREFIX}${Constants.HISTORY} ${WebHookUrl.BAO_STOCK_STOCK_HISTORY}"
 			cmd = "$cmd $stockCode $startDay $endDay"
 			cmd.executeAsRuntimeCmd()
 		} catch (e: Exception) {
