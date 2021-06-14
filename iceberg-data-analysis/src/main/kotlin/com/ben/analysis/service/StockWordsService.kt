@@ -48,16 +48,18 @@ class StockWordsService(
 									last5.filter { it2 -> it2.date > minHistory.date }.toList().size.toBigInteger()
 										?: BigInteger.ZERO
 							}
-							stockWordsList.add(words)
+//							stockWordsList.add(words)
+							stockWordsRepository.save(words)
 							logger.info("#stockWords already done stock words ${stockNo},${it.low},${it.date}")
 						}
 					}
-					if (stockWordsList.size == 40) {
-						stockWordsRepository.saveAll(stockWordsList)
-						stockWordsList.clear()
-					}
+//					if (stockWordsList.size == 40) {
+//						stockWordsRepository.saveAll(stockWordsList)
+//						stockWordsList.clear()
+//					}
 				} catch (e: Exception) {
 					logger.error("#stockWords error stock = $stock", e)
+					continue
 				}
 			}
 		if (stockWordsList.isNotEmpty())
