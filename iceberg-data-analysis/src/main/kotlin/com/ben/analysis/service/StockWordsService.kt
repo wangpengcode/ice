@@ -69,22 +69,24 @@ class StockWordsService(
 	@Async(value = "asyncExecutor")
 	fun checkWordsValid(lastWords: StockWords) {
 		try {
-			val newestHistory = stockHistoryRepository.queryHistoryOrderByDateDesc(lastWords.code_with_ex)
-				.sortedByDescending { it.date }.first()
-			if (newestHistory.date > lastWords.date && isValidStockWords(lastWords, newestHistory)) {
-				lastWords.apply {
-					last_day = this.last_day?.let { it.add(BigInteger.ONE) } ?: BigInteger.ONE
+			val allHistory = stockHistoryRepository.queryHistoryOrderByDateDesc(lastWords.code_with_ex)
+					.sortedByDescending { it.date }
+			val lastHistory = allHistory.filter { it.date > lastWords.date }
+			var isValid = true
+			var lastDays = 0
+			for(i in lastHistory) {
+				if (isValidStockWords(lastWords, i)) {
+					lastDays += 1
+				}else {
+					isValid = false
+					break
 				}
-				stockWordsRepository.save(lastWords)
 			}
-			
-			if (newestHistory.date > lastWords.date && ! isValidStockWords(lastWords, newestHistory)) {
-				lastWords.apply {
-					words_is_valid = false
-				}
-				stockWordsRepository.save(lastWords)
+			lastWords.apply {
+				this.last_day = lastDays.toBigInteger()
+				this.words_is_valid = isValid
 			}
-			
+			stockWordsRepository.save(lastWords)
 		} catch (e: Exception) {
 			logger.info("#checkWordsValid error", e)
 		}
