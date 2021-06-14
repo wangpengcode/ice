@@ -18,7 +18,7 @@ fun StockHistory.toSuperStar(codeName: String, industry: String, dt: Boolean = f
         zt = zt
 )
 
-fun StockHistory.toStockWords(codeName: String, industry: String, wordsIsValid: Boolean = false) = StockWords(
+fun StockHistory.toStockWords(codeName: String, industry: String, wordsIsValid: Boolean = true) = StockWords(
         id = null,
         code_with_ex = stockNo,
         code_name = codeName,
