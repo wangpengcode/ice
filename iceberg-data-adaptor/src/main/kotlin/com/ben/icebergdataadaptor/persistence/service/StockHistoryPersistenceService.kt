@@ -14,14 +14,15 @@ class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRep
 			stockHistoryRepository.saveAll(entities)
 		} else null
 	} catch (e: Exception) {
-		logger.error("#saveAll with error", e)
+		logger.error("#saveAll with error {}", e.message)
+		entities.forEach { save(it) }
 		null
 	}
 	
 	fun save(entity: StockHistory) = try {
 		stockHistoryRepository.save(entity)
 	} catch (e: Exception) {
-		logger.error("#save with error", e)
+		logger.error("#save with error: {}", e.message)
 		throw e
 	}
 	
