@@ -1,5 +1,6 @@
 package com.ben.analysis.persistence.service
 
+import com.ben.analysis.extensions.toNakedCode
 import com.ben.analysis.persistence.entity.StockHistory
 import com.ben.analysis.persistence.repository.StockHistoryRepository
 import org.slf4j.Logger
@@ -31,8 +32,8 @@ class StockHistoryPersistenceService(val stockHistoryRepository: StockHistoryRep
 		null
 	}
 	
-	fun queryTheNewestDay(stockNo: String) = try {
-		stockHistoryRepository.queryTheNewestDay(stockNo)
+	fun queryStocks(stockNo: String) = try {
+		stockHistoryRepository.queryHistoryByStockNo(stockNo,stockNo.toNakedCode().toBigInteger())
 	} catch (e: Exception) {
 		logger.error("#queryTheNewestDay error", e)
 		null

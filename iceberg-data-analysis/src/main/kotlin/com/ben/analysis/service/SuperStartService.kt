@@ -1,7 +1,7 @@
 package com.ben.analysis.service
 
 import com.ben.analysis.constants.Constants
-import com.ben.analysis.persistence.entity.StockHistory
+import com.ben.analysis.extensions.toNakedCode
 import com.ben.analysis.persistence.entity.SuperStar
 import com.ben.analysis.persistence.repository.StockHistoryRepository
 import com.ben.analysis.persistence.repository.StockInfoRepository
@@ -24,7 +24,7 @@ class SuperStartService(
     @Async(value = "asyncExecutor")
     fun superStar(stockNo: String) {
         try {
-            val histories = stockHistoryRepository.queryHistoryByStockNo(stockNo)
+            val histories = stockHistoryRepository.queryHistoryByStockNo(stockNo,stockNo.toNakedCode().toBigInteger())
             if (histories == null || histories.isEmpty()) return
             val stockNo = histories[0].stockNo
             val lastSuperDate = superStarRepository.queryTheNewestDay(stockNo)
