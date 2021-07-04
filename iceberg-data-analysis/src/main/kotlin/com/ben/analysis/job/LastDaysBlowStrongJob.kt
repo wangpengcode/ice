@@ -82,7 +82,7 @@ class LastDaysBlowStrongJob(val stockInfo: StockInfoPersistenceService, val hist
                     ?.add(histories[i + 1].turn?.toBigDecimalOrNull() ?: BigDecimal.ZERO)
                     ?.add(histories[i + 2].turn?.toBigDecimalOrNull() ?: BigDecimal.ZERO) ?: BigDecimal.ZERO
             if (turn <= BigDecimal.TEN) {
-                date = histories[i + 2].date
+                date = histories[i].date
                 break
             }
             i++
