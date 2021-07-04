@@ -74,7 +74,7 @@ class LastDaysBlowStrongJob(val stockInfo: StockInfoPersistenceService, val hist
             val change = histories[i].pctChg?.toBigDecimalOrNull()
                     ?.add(histories[i + 1].pctChg?.toBigDecimalOrNull() ?: BigDecimal.ZERO)
                     ?.add(histories[i + 2].pctChg?.toBigDecimalOrNull() ?: BigDecimal.ZERO) ?: BigDecimal.ZERO
-            if (change < BigDecimal("20")) {
+            if (change < BigDecimal("15")) {
                 i++
                 continue
             }
