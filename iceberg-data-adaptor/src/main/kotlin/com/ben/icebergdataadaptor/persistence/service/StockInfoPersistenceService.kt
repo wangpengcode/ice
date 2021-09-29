@@ -25,6 +25,10 @@ class StockInfoPersistenceService(
 		return stockInfoRepository.findByStockNo(stockNo)
 	}
 	
+	fun findByStockNoOrNull(stockNo: String): StockInfo? {
+		return stockInfoRepository.findByStockNoOrNull(stockNo)
+	}
+	
 	fun queryAll(): List<StockInfo>? = try {
 		stockInfoRepository.findAll().toList()
 	} catch (e: Exception) {

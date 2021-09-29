@@ -8,4 +8,5 @@ object Constants {
 	const val STOCK_INFO = "/testAllStockInfo.py"
 	const val HISTORY = "/StockHistory.py"
 	const val INDUSTRY = "/StockIndustry.py"
+	const val STOCK_NO_REG_PATTERN = "(0[\\d]{5}|3[\\d]{5}|6[\\d]{5})"
 }

@@ -35,6 +35,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("com.google.guava:guava:23.0")
+    // https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox
+    implementation ("org.apache.pdfbox:pdfbox:2.0.24")
 }
 
 tasks.withType<KotlinCompile> {
