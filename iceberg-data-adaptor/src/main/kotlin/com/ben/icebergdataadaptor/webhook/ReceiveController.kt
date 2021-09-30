@@ -123,7 +123,7 @@ class ReceiveController(
 				val fields = dataOfOneDate.split(",").deleteQuotation()
 				val history = fields.toStockHistory()
 				tempList.add(history)
-				if (tempList.size == 80) {
+				if (tempList.size == 250) {
 					stockHistoryPersistenceService.saveAll(tempList)
 					tempList.clear()
 				}
