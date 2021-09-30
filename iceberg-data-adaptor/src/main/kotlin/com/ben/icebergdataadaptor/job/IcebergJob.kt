@@ -72,6 +72,6 @@ class IcebergJob(
 	
 	companion object {
 		val logger: Logger = LoggerFactory.getLogger(IcebergJob::class.java)
-		const val THE_ANCIENT = "2000-01-01"
+		const val THE_ANCIENT = "2019-01-01"
 	}
 }
