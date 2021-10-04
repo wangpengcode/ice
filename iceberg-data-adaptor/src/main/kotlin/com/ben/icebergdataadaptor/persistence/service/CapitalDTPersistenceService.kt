@@ -8,6 +8,27 @@ import org.springframework.stereotype.Service
 
 @Service
 class CapitalDTPersistenceService(val repository: CapitalDTRepository) {
+	fun queryByDate(date: String) : List<CapitalDT>? {
+		return try {
+			repository.queryByDate2(date)
+		} catch (e: Exception) {
+			logger.error("queryByDate#queryByCode error", e)
+			return null
+		}
+	}
+	fun queryByCode(code: String) : List<CapitalDT>? {
+		return try {
+		    repository.queryByStockNo(code)
+		} catch (e: Exception) {
+			logger.error("CapitalDTPersistenceService#queryByCode error", e)
+			return null
+		}
+	}
+
+	fun queryMaxDate(): String? {
+		return repository.queryMaxDate()
+	}
+
 	fun queryLastMonth(times: Int): List<CapitalDT> {
 		return try {
 			repository.queryLastMonth(times)

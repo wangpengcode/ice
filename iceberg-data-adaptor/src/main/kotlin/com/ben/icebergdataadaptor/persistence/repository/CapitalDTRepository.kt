@@ -20,4 +20,13 @@ interface CapitalDTRepository: CrudRepository<CapitalDT, String> {
 	
 	@Query("FROM CapitalDT where lastHalfYear >= ?1")
 	fun queryLastHalfYear(times: Int): List<CapitalDT>
+
+	@Query("select max(date) from CapitalDT")
+	fun queryMaxDate(): String?
+
+	@Query("From CapitalDT where date = ?1")
+	fun queryByDate(date: String): List<CapitalDT>?
+
+	@Query(value = "select * from CAPITAL_DT where date = ?1",nativeQuery = true)
+	fun queryByDate2(date: String): List<CapitalDT>?
 }
